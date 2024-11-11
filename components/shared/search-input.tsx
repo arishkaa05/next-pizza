@@ -5,7 +5,7 @@ import { Api } from '@/services/api-client';
 import { Product } from '@prisma/client';
 import { Search } from 'lucide-react';
 import Link from 'next/link';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useClickAway, useDebounce } from 'react-use';
 
 interface Props {
@@ -22,10 +22,13 @@ export const SearchInput: React.FC<Props> = ({ className }) => {
     setFocused(false)
   })
 
-  useDebounce(() => {
-    Api.products.search(searchQuery).then(items => {
-      setProducts(items)
-    })
+  useDebounce(async () => {
+    try {
+      const response = await Api.products.search(searchQuery)
+      setProducts(response)
+    } catch (error) {
+      console.error(error)
+    }
   }, 300, [searchQuery])
 
   const onClickItem = () => {
@@ -33,7 +36,7 @@ export const SearchInput: React.FC<Props> = ({ className }) => {
     setSearchQuery('')
     setProducts([])
   }
-  
+
   return (
     <>
       {focused && <div className="fixed top-0 left-0 bottom-0 right-0 bg-black/50 z-30" />}
@@ -56,7 +59,7 @@ export const SearchInput: React.FC<Props> = ({ className }) => {
             className={cn(
               'absolute w-full bg-white rounded-xl py-2 top-14 shadow-md transition-all duration-200 invisible opacity-0 z-30',
               focused && 'visible opacity-100 top-12',
-            )}> 
+            )}>
             {products.map((product) => (
               <Link
                 onClick={onClickItem}
