@@ -10,7 +10,7 @@ import { GroupVariants } from './group-variants';
 import { PizzaSize, PizzaType, pizzaTypes } from '@/shared/constants/pizza';
 import { IngredientItem } from './ingredient-item';
 import { cn } from '@/shared/lib/utils';
-// import { getPizzaDetails } from '@/lib';
+import { getPizzaDetails } from '@/shared/lib';
 import { usePizzaOptions } from '@/shared/hooks';
 
 interface Props {
@@ -46,13 +46,13 @@ export const ChoosePizzaForm: React.FC<Props> = ({
     addIngredient,
   } = usePizzaOptions(items);
 
-  // const { totalPrice, textDetaills } = getPizzaDetails(
-  //   type,
-  //   size,
-  //   items,
-  //   ingredients,
-  //   selectedIngredients,
-  // );
+  const { totalPrice, textDetaills } = getPizzaDetails(
+    type,
+    size,
+    items,
+    ingredients,
+    selectedIngredients,
+  );
 
   // const handleClickAdd = () => {
   //   if (currentItemId) {
@@ -83,9 +83,9 @@ export const ChoosePizzaForm: React.FC<Props> = ({
           />
         </div>
 
-        {/* <div className="bg-gray-50 p-5 rounded-md h-[420px] overflow-auto scrollbar mt-5">
+        <div className="bg-gray-50 p-5 rounded-md h-[420px] overflow-auto scrollbar mt-5">
           <div className="grid grid-cols-3 gap-3">
-            {ingredients.map((ingredient) => (
+            {ingredients?.map((ingredient) => (
               <IngredientItem
                 key={ingredient.id}
                 name={ingredient.name}
@@ -96,14 +96,14 @@ export const ChoosePizzaForm: React.FC<Props> = ({
               />
             ))}
           </div>
-        </div> */}
+        </div>
 
-        {/* <Button
+        <Button
           loading={loading}
-          onClick={handleClickAdd}
+          onClick={() => console.log(12)}
           className="h-[55px] px-10 text-base rounded-[18px] w-full mt-10">
           Добавить в корзину за {totalPrice} ₽
-        </Button> */}
+        </Button>
       </div>
     </div>
   );
