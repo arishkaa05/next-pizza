@@ -1,7 +1,7 @@
 'use client';
 
 import { ProductWithRelations } from '@/@types/prisma';
-// import { useCartStore } from '@/shared/store';
+import { useCartStore } from '@/shared/store';
 import React from 'react';
 import toast from 'react-hot-toast';
 import { ChoosePizzaForm } from './choose-pizza-form';
@@ -13,7 +13,7 @@ interface Props {
 }
 
 export const ProductForm: React.FC<Props> = ({ product, onSubmit: _onSubmit }) => {
-  // const [addCartItem, loading] = useCartStore((state) => [state.addCartItem, state.loading]);
+  const [addCartItem, loading] = useCartStore((state) => [state.addCartItem, state.loading]);
 
   const firstItem = product.items[0];
   const isPizzaForm = Boolean(firstItem.pizzaType);
@@ -22,10 +22,10 @@ export const ProductForm: React.FC<Props> = ({ product, onSubmit: _onSubmit }) =
     try {
       const itemId = productItemId ?? firstItem.id;
 
-      // await addCartItem({
-      //   productItemId: itemId,
-      //   ingredients,
-      // });
+      await addCartItem({
+        productItemId: itemId,
+        ingredients,
+      });
 
       toast.success(product.name + ' добавлена в корзину');
 
@@ -37,23 +37,25 @@ export const ProductForm: React.FC<Props> = ({ product, onSubmit: _onSubmit }) =
   };
 
   if (isPizzaForm) {
-    return (  
+    return (
       <ChoosePizzaForm
         imageUrl={product.imageUrl}
         name={product.name}
         ingredients={product.ingredients}
         items={product.items}
-        onSubmit={onSubmit} 
+        onSubmit={onSubmit}
+        loading={loading}
       />
     );
   }
 
-  return ( 
+  return (
     <ChooseProductForm
       imageUrl={product.imageUrl}
       name={product.name}
       onSubmit={onSubmit}
-      price={firstItem.price} 
+      price={firstItem.price}
+      loading={loading}
     />
   );
 };
