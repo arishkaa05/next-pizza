@@ -1,17 +1,18 @@
 'use server';
 
 import { prisma } from '@/prisma/prisma-client';
+import { PayOrderTemplate } from '@/shared/components/shared';
 // import { PayOrderTemplate } from '@/shared/components';
 // import { VerificationUserTemplate } from '@/shared/components/shared/email-temapltes/verification-user';
 import { CheckoutFormValues } from '@/shared/constants';
-// import { createPayment, sendEmail } from '@/shared/lib';
+import { sendEmail } from '@/shared/lib';
 // import { getUserSession } from '@/shared/lib/get-user-session';
 import { OrderStatus, Prisma } from '@prisma/client';
 import { hashSync } from 'bcrypt';
 import { cookies } from 'next/headers';
 
 export async function createOrder(data: CheckoutFormValues) {
-  try {
+  try { 
     const cookieStore = cookies();
     const cartToken = cookieStore.get('cartToken')?.value;
 
@@ -37,7 +38,7 @@ export async function createOrder(data: CheckoutFormValues) {
       where: {
         token: cartToken,
       },
-    });
+    }); 
 
     /* Если корзина не найдена возращаем ошибку */
     if (!userCart) {
@@ -112,17 +113,17 @@ export async function createOrder(data: CheckoutFormValues) {
     //   },
     // });
 
-    // const paymentUrl = paymentData.confirmation.confirmation_url;
-
-    // await sendEmail(
-    //   data.email,
-    //   'Next Pizza / Оплатите заказ #' + order.id,
-    //   PayOrderTemplate({
-    //     orderId: order.id,
-    //     totalAmount: order.totalAmount,
-    //     paymentUrl,
-    //   }),
-    // );
+    const paymentUrl = 'paymentData.confirmation.confirmation_url';
+ 
+    await sendEmail(
+      data.email,
+      'Next Pizza / Оплатите заказ #' + order.id,
+      PayOrderTemplate({
+        orderId: order.id,
+        totalAmount: order.totalAmount,
+        paymentUrl,
+      }),
+    );
 
     return 'paymentUrl';
   } catch (err) {

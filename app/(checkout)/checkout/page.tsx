@@ -53,7 +53,7 @@ export default function CheckoutPage() {
 
   const onSubmit = async (data: CheckoutFormValues) => {
     try {
-      setSubmitting(true);
+      setSubmitting(true); 
 
       const url = await createOrder(data);
 
