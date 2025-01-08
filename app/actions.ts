@@ -2,10 +2,10 @@
 
 import { prisma } from '@/prisma/prisma-client';
 import { PayOrderTemplate } from '@/shared/components/shared';
-// import { PayOrderTemplate } from '@/shared/components';
 // import { VerificationUserTemplate } from '@/shared/components/shared/email-temapltes/verification-user';
 import { CheckoutFormValues } from '@/shared/constants';
 import { sendEmail } from '@/shared/lib';
+import { createPayment } from '@/shared/lib';
 // import { getUserSession } from '@/shared/lib/get-user-session';
 import { OrderStatus, Prisma } from '@prisma/client';
 import { hashSync } from 'bcrypt';
@@ -94,26 +94,26 @@ export async function createOrder(data: CheckoutFormValues) {
     });
 
 
-    // const paymentData = await createPayment({
-    //   amount: order.totalAmount,
-    //   orderId: order.id,
-    //   description: 'Оплата заказа #' + order.id,
-    // });
+    const paymentData = await createPayment({
+      amount: order.totalAmount,
+      orderId: order.id,
+      description: 'Оплата заказа #' + order.id,
+    });
 
-    // if (!paymentData) {
-    //   throw new Error('Payment data not found');
-    // }
+    if (!paymentData) {
+      throw new Error('Payment data not found');
+    }
 
-    // await prisma.order.update({
-    //   where: {
-    //     id: order.id,
-    //   },
-    //   data: {
-    //     paymentId: paymentData.id,
-    //   },
-    // });
+    await prisma.order.update({
+      where: {
+        id: order.id,
+      },
+      data: {
+        paymentId: paymentData.id,
+      },
+    });
 
-    const paymentUrl = 'paymentData.confirmation.confirmation_url';
+    const paymentUrl = paymentData.confirmation.confirmation_url;
  
     await sendEmail(
       data.email,
@@ -125,7 +125,7 @@ export async function createOrder(data: CheckoutFormValues) {
       }),
     );
 
-    return 'paymentUrl';
+    return paymentUrl;
   } catch (err) {
     console.log('[CreateOrder] Server error', err);
   }
