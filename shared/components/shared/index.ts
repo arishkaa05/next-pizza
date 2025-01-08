@@ -33,6 +33,8 @@ export { CheckoutItem } from './checkout-item';
 export { CheckoutItemSkeleton } from './checkout-item-skeleton';
 export { CheckoutSidebar } from './checkout-sidebar';
 export { ProfileButton} from './profile-button';
+export { ProfileForm } from './profile-form';
+export { InfoBlock } from './info-block'
 export * from './email-temapltes';
 export * from './checkout';
 export * from './form';
