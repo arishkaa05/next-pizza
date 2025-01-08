@@ -35,6 +35,7 @@ export { CheckoutSidebar } from './checkout-sidebar';
 export { ProfileButton} from './profile-button';
 export { ProfileForm } from './profile-form';
 export { InfoBlock } from './info-block'
+export { Stories } from './stories'
 export * from './email-temapltes';
 export * from './checkout';
 export * from './form';
